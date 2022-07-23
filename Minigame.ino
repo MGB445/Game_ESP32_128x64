@@ -2,7 +2,7 @@
 #include <splash.h>
 
 //---------------------------------------
-// Test_V3
+// Test_3
 //---------------------------------------
 
 
@@ -63,7 +63,7 @@ void loop() {
   
   display.clearDisplay();
 
-  ucAnimation++;
+  /*ucAnimation++;
 
   if(ucAnimation == 30) {
     Player.ucPosY++;
@@ -71,7 +71,7 @@ void loop() {
   else if(ucAnimation == 60) {
     Player.ucPosY--;
     ucAnimation = 0;
-  }
+  }*/
 
   if(Player.ucMovement&0x3F) {
     if(digitalRead(ci_BUTTON[DEF_UP])) {
@@ -95,27 +95,35 @@ void loop() {
     
     switch(Player.ucMovement & 0x03) {
     case 1<<DEF_UP:
-      if(Player.ucPosY > 0) {
-        Player.ucPosY--;
+      if(!(cWorlddata[(Player.ucPosY-1) / 8][Player.ucPosX / 8] & 0x80)) {
+        if(Player.ucPosY > 0) {
+          Player.ucPosY--;
+        }
       }
       break;
     case 1<<DEF_DOWN:
-      if(Player.ucPosY < SCREEN_HEIGHT-1-8) {
-        Player.ucPosY++;
+      if(!(cWorlddata[(Player.ucPosY+8) / 8][Player.ucPosX / 8] & 0x80)) {
+        if(Player.ucPosY < SCREEN_HEIGHT-1-8) {
+          Player.ucPosY++;
+        }
       }
       break;
     }
     switch(Player.ucMovement & 0x0C) {
     case 1<<DEF_LEFT:
       Player.ucMovement |= 1<<DEF_LOOKHORIZONTAL;
-      if(Player.ucPosX > 0) {
-        Player.ucPosX--;
+      if(!(cWorlddata[Player.ucPosY / 8][(Player.ucPosX-1) / 8] & 0x80)) {
+        if(Player.ucPosX > 0) {
+          Player.ucPosX--;
+        }
       }
       break;
     case 1<<DEF_RIGHT:
       Player.ucMovement &= ~(1<<DEF_LOOKHORIZONTAL);
-      if(Player.ucPosX < SCREEN_WIDTH-1-8) {
-        Player.ucPosX++;
+      if(!(cWorlddata[Player.ucPosY / 8][(Player.ucPosX+8) / 8] & 0x80)) {
+        if(Player.ucPosX < SCREEN_WIDTH-1-8) {
+          Player.ucPosX++;
+        }
       }
       break;
     }
@@ -140,6 +148,7 @@ void loop() {
     }
   }
 
+
   if(Fireball.ucMovement) {
     if(Fireball.ucMovement & (1<<DEF_LOOKHORIZONTAL)) {
       if(Fireball.ucPosX > 1) {
@@ -159,7 +168,7 @@ void loop() {
         Fireball.ucMovement = 0;
       }
     }
-  }
+  } 
 
   if(Player.ucMovement & (1<<DEF_LOOKHORIZONTAL)) {
     display.drawBitmap(Player.ucPosX, Player.ucPosY, cDesignPlayerLeft, 8, 8, WHITE);
