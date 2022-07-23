@@ -132,13 +132,12 @@ void loop() {
       if(!(Fireball.ucMovement & 0x04)) {
         Fireball.ucMovement |= 0x04;    // Fireball active
         Fireball.ucMovement |= Player.ucMovement & (1<<DEF_LOOKHORIZONTAL);
+        Fireball.ucPosY = Player.ucPosY;
         if(Player.ucMovement & (1<<DEF_LOOKHORIZONTAL)) {
           Fireball.ucPosX = Player.ucPosX-6;
-          Fireball.ucPosY = Player.ucPosY;
         }
         else {
           Fireball.ucPosX = Player.ucPosX+6;
-          Fireball.ucPosY = Player.ucPosY;
         }
       }
       break;
